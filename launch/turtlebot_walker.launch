@@ -1,0 +1,12 @@
+<launch>
+    <!-- Turtlebot world launch file-->
+    <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch"/>
+
+    <!-- Launch walker node-->
+    <node 
+        pkg="turtlebot_walker"
+        type="walker"
+        name="walker" 
+    />
+
+</launch>
