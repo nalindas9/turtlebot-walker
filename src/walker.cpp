@@ -4,7 +4,7 @@
  *  @author Nalin Das
  *  @date 11/18/2020
  *
- *  @brief Walker class 
+ *  @brief Walker class methods implementation
  *
  *  @section LICENSE
  *  
@@ -30,7 +30,7 @@
  * 
  *  @section DESCRIPTION
  *
- *  Header file for Walker Algorithm Class 
+ *  Source file for Walker Class methods
  *
  */
 
@@ -40,7 +40,7 @@
 #include "geometry_msgs/Twist.h"
 #include "walker.hpp"
 
-void sdw::Walker::laser_callback(const sensor_msgs::LaserScan::ConstPtr& data) {
+void sdw::Walker::laserCallback(const sensor_msgs::LaserScan::ConstPtr& data) {
     distance = 0;
     for (int val:data) {
         if (val > distance)
@@ -50,7 +50,7 @@ void sdw::Walker::laser_callback(const sensor_msgs::LaserScan::ConstPtr& data) {
 
 sdw::Walker::Walker(ros::NodeHandle node) {
     // ROS subscriber to LaserScan
-    ros::Subscriber laserSubscriber = node.subscribe("/scan", 1000, &laser_callback);
+    ros::Subscriber laserSubscriber = node.subscribe("/scan", 1000, &laserCallback);
 
     // ROS publisher to velocity topic
     ros::Publisher velocityPublisher = node.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1)
