@@ -41,22 +41,19 @@
 #include "walker.hpp"
 
 void sdw::Walker::laserCallback(const sensor_msgs::LaserScan::ConstPtr& data) {
-    distance = 0;
-    for (int val:data) {
-        if (val > distance)
-            distance = val;
-    }
+    distance = data->ranges[180];
+    ROS_INFO_STREAM("Distance: " << distance);
 }
 
 sdw::Walker::Walker(ros::NodeHandle node) {
     // ROS subscriber to LaserScan
-    ros::Subscriber laserSubscriber = node.subscribe("/scan", 1000, &laserCallback);
+    ros::Subscriber laserSubscriber = node.subscribe("/scan", 1000, &Walker::laserCallback, this);
 
     // ROS publisher to velocity topic
-    ros::Publisher velocityPublisher = node.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1)
+    ros::Publisher velocityPublisher = node.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 
     // Looprate of 4 Hz
-    ros::Rate  looprate(4);
+    ros::Rate rate(4);
 
     while (ros::ok()) {
         // Define twist msg
@@ -69,16 +66,16 @@ sdw::Walker::Walker(ros::NodeHandle node) {
         twist.angular.y = 0.0;
         twist.angular.z = 0.0;
 
-        if (distance > 0.77) {
+        if (distance > 0.45) {
             ROS_INFO_STREAM("Moving forward ...");
-            twist.linear.x = 0.15;
+            twist.linear.x = -0.12;
         } else {
             ROS_INFO_STREAM("Rotating ...");
             twist.angular.z = 1.5;
         }
 
-        velocityPublisher.publish(twist)
+        velocityPublisher.publish(twist);
         ros::spinOnce();
-        loopRate.sleep();
+        rate.sleep();
     }
 }

@@ -60,12 +60,6 @@ class Walker {
      * @brief Laserscan subscriber callback
      * @param data Single scan from a planar laser range finder
      * **/
-    void laser_callback(const sensor_msgs::LaserScan::ConstPtr& data);
-
-    /**
-     * @brief Walker class destructor.
-     * @param node ROS Nodehandle
-     * **/
-    ~Walker(ros::NodeHandle node) {};
+    void laserCallback(const sensor_msgs::LaserScan::ConstPtr& data);
 };
 } // namespace sdw
